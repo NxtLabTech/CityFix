@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CityFix - Report a problem</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a class="brand" href="index.html">CityFix</a>
+            <nav class="nav">
+                <a href="index.html">Reports</a>
+                <a href="new-report.html" aria-current="page">Report a problem</a>
+                <a href="admin.html">Staff</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <h1>Report a problem</h1>
+        <p class="page-intro">Tell us what is wrong and where. Other residents can then upvote your report.</p>
+
+        <form id="report-form" class="card form-card" novalidate>
+            <div class="form-group">
+                <label for="title">Title</label>
+                <input type="text" id="title" name="title">
+            </div>
+            <div class="form-group">
+                <label for="description">Description</label>
+                <textarea id="description" name="description"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="category">Category</label>
+                <select id="category" name="category">
+                    <option value="">Choose a category</option>
+                    <option value="POTHOLE">Pothole</option>
+                    <option value="STREETLIGHT">Streetlight</option>
+                    <option value="GARBAGE">Garbage</option>
+                    <option value="GRAFFITI">Graffiti</option>
+                    <option value="WATER_LEAK">Water leak</option>
+                    <option value="OTHER">Other</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="area">Area</label>
+                <input type="text" id="area" name="area" placeholder="For example Downtown">
+            </div>
+            <div class="form-group">
+                <label for="address">Address</label>
+                <input type="text" id="address" name="address" placeholder="For example Main St near no. 42">
+            </div>
+            <div class="form-group">
+                <label for="reporterName">Your name</label>
+                <input type="text" id="reporterName" name="reporterName">
+            </div>
+            <div class="form-group">
+                <label for="reporterEmail">Your email</label>
+                <input type="email" id="reporterEmail" name="reporterEmail">
+            </div>
+
+            <button type="submit">Submit report</button>
+            <p id="message" class="message"></p>
+        </form>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">CityFix - a learning project for reporting small city problems.</div>
+    </footer>
+
+    <script src="js/api.js"></script>
+    <script src="js/new-report.js"></script>
+</body>
+</html>
