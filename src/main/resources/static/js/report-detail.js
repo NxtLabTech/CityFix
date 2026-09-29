@@ -3,6 +3,7 @@ const message = document.getElementById("message");
 const reportDetails = document.getElementById("report");
 const upvoteForm = document.getElementById("upvote-form");
 const upvoteMessage = document.getElementById("upvote-message");
+const upvoteButton = upvoteForm.querySelector("button[type=\"submit\"]");
 
 function showReport(report) {
     document.getElementById("title").textContent = report.title;
@@ -39,6 +40,11 @@ async function loadReport() {
 
 upvoteForm.addEventListener("submit", async event => {
     event.preventDefault();
+    if (upvoteButton.disabled) {
+        return;
+    }
+
+    upvoteButton.disabled = true;
     upvoteMessage.className = "message";
     upvoteMessage.textContent = "Sending...";
 
@@ -51,6 +57,8 @@ upvoteForm.addEventListener("submit", async event => {
     } catch (error) {
         upvoteMessage.className = "message message-error";
         upvoteMessage.textContent = error.message;
+    } finally {
+        upvoteButton.disabled = false;
     }
 });
 

@@ -1,10 +1,33 @@
 const API_URL = "/api/reports";
 
 async function request(url, options) {
-    const response = await fetch(url, options);
-    const data = await response.json();
+    let response;
+    let body;
+
+    try {
+        response = await fetch(url, options);
+        body = await response.text();
+    } catch (error) {
+        if (error instanceof TypeError || error && error.name === "TypeError") {
+            throw new Error("Cannot reach the server. Please try again.");
+        }
+        throw error;
+    }
+
+    let data = null;
+    if (body.trim()) {
+        try {
+            data = JSON.parse(body);
+        } catch (error) {
+            if (!response.ok) {
+                throw new Error("Request failed with status " + response.status + ".");
+            }
+            throw new Error("Server returned an invalid response.");
+        }
+    }
+
     if (!response.ok) {
-        throw new Error(data.message || "Something went wrong");
+        throw new Error(data && data.message || "Request failed with status " + response.status + ".");
     }
     return data;
 }

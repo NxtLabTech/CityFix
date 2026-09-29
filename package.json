@@ -1,0 +1,7 @@
+{
+    "name": "cityfix-frontend-tests",
+    "private": true,
+    "scripts": {
+        "test": "node --test test/frontend/*.test.js"
+    }
+}
