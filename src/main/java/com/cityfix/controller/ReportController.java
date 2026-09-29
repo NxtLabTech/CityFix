@@ -3,6 +3,8 @@ package com.cityfix.controller;
 import com.cityfix.dto.CreateReportRequest;
 import com.cityfix.dto.UpdateStatusRequest;
 import com.cityfix.dto.UpvoteRequest;
+import com.cityfix.dto.ReportResponse;
+import com.cityfix.mapper.ReportMapper;
 import com.cityfix.model.Category;
 import com.cityfix.model.Report;
 import com.cityfix.model.ReportStatus;
@@ -26,24 +28,29 @@ import java.util.Map;
 @RequestMapping("/api/reports")
 public class ReportController {
 
+    private final ReportMapper mapper;
     private final ReportService reportService;
 
-    public ReportController(ReportService reportService) {
+    public ReportController(ReportMapper mapper, ReportService reportService) {
+        this.mapper = mapper;
         this.reportService = reportService;
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Report createReport(@Valid @RequestBody CreateReportRequest request) {
-        return reportService.createReport(request);
+    public ReportResponse createReport(@Valid @RequestBody CreateReportRequest request) {
+        Report report = reportService.createReport(request);
+        return mapper.toDTO(report);
     }
 
     @GetMapping
-    public List<Report> listReports(@RequestParam(required = false) String area,
+    public List<ReportResponse> listReports(@RequestParam(required = false) String area,
                                     @RequestParam(required = false) ReportStatus status,
                                     @RequestParam(required = false) Category category,
                                     @RequestParam(defaultValue = "newest") String sort) {
-        return reportService.findReports(area, status, category, sort);
+        List<Report> reports = reportService.findReports(area, status, category, sort);
+
+        return mapper.toDTO(reports);
     }
 
     @GetMapping("/stats")
@@ -52,18 +59,24 @@ public class ReportController {
     }
 
     @GetMapping("/{id}")
-    public Report getReport(@PathVariable Long id) {
-        return reportService.findReportById(id);
+    public ReportResponse getReport(@PathVariable Long id) {
+        Report report = reportService.findReportById(id);
+
+        return mapper.toDTO(report);
     }
 
     @PatchMapping("/{id}/status")
-    public Report updateStatus(@PathVariable Long id, @Valid @RequestBody UpdateStatusRequest request) {
-        return reportService.updateStatus(id, request.status());
+    public ReportResponse updateStatus(@PathVariable Long id, @Valid @RequestBody UpdateStatusRequest request) {
+        Report report = reportService.updateStatus(id, request.status());
+
+        return mapper.toDTO(report);
     }
 
     @PostMapping("/{id}/upvotes")
     @ResponseStatus(HttpStatus.CREATED)
-    public Report upvoteReport(@PathVariable Long id, @Valid @RequestBody UpvoteRequest request) {
-        return reportService.upvoteReport(id, request.voterEmail());
+    public ReportResponse upvoteReport(@PathVariable Long id, @Valid @RequestBody UpvoteRequest request) {
+        Report report = reportService.upvoteReport(id, request.voterEmail());
+
+        return mapper.toDTO(report);
     }
 }
