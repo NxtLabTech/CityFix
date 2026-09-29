@@ -1,5 +1,6 @@
 package com.cityfix.model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -24,6 +25,7 @@ public class Upvote {
     @JoinColumn(name = "report_id")
     private Report report;
 
+    @Column(nullable = false)
     private String voterEmail;
 
     private LocalDateTime createdAt;

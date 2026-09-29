@@ -19,29 +19,37 @@ public class Report {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String title;
 
-    @Column(length = 2000)
+    @Column(length = 2000, nullable = false)
     private String description;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private Category category;
 
+    @Column(nullable = false)
     private String area;
 
     private String address;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private ReportStatus status;
 
+    @Column(nullable = false)
     private String reporterName;
 
+    @Column(nullable = false)
     private String reporterEmail;
 
     private int upvoteCount;
 
+    @Column(nullable = false)
     private LocalDateTime createdAt;
 
+    @Column(nullable = false)
     private LocalDateTime updatedAt;
 
     private LocalDateTime fixedAt;
