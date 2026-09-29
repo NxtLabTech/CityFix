@@ -41,6 +41,7 @@ function createReportItem(report) {
 function showStats(stats) {
     const parts = Object.entries(stats.byStatus)
         .map(([status, count]) => formatLabel(status) + ": " + count);
+    statsText.className = "stats";
     statsText.textContent = parts.join(" | ");
 }
 
@@ -49,15 +50,25 @@ async function loadReports() {
     message.textContent = "Loading reports...";
     reportList.replaceChildren();
 
+    const filters = Object.fromEntries(new FormData(filterForm));
+    const reportsPromise = getReports(filters);
+    const statsPromise = getStats();
+
     try {
-        const filters = Object.fromEntries(new FormData(filterForm));
-        const [reports, stats] = await Promise.all([getReports(filters), getStats()]);
-        showStats(stats);
+        const reports = await reportsPromise;
         message.textContent = reports.length === 0 ? "No reports found. Try changing the filters." : "";
         reports.forEach(report => reportList.append(createReportItem(report)));
     } catch (error) {
         message.className = "message message-error";
         message.textContent = "Could not load reports: " + error.message;
+    }
+
+    try {
+        const stats = await statsPromise;
+        showStats(stats);
+    } catch (error) {
+        statsText.className = "stats stats-error";
+        statsText.textContent = "Could not load stats: " + error.message;
     }
 }
 

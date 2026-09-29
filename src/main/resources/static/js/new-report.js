@@ -1,8 +1,14 @@
 const reportForm = document.getElementById("report-form");
 const message = document.getElementById("message");
+const submitButton = reportForm.querySelector("button[type=\"submit\"]");
 
 reportForm.addEventListener("submit", async event => {
     event.preventDefault();
+    if (submitButton.disabled) {
+        return;
+    }
+
+    submitButton.disabled = true;
     message.className = "message";
     message.textContent = "Sending...";
 
@@ -15,5 +21,7 @@ reportForm.addEventListener("submit", async event => {
     } catch (error) {
         message.className = "message message-error";
         message.textContent = error.message;
+    } finally {
+        submitButton.disabled = false;
     }
 });
