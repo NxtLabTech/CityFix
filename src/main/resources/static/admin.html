@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CityFix - Staff</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a class="brand" href="index.html">CityFix</a>
+            <nav class="nav">
+                <a href="index.html">Reports</a>
+                <a href="new-report.html">Report a problem</a>
+                <a href="admin.html" aria-current="page">Staff</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <h1>Staff dashboard</h1>
+        <p class="page-intro">Staff use this page to update the status of reports.</p>
+
+        <p id="message" class="message"></p>
+
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th scope="col">Title</th>
+                        <th scope="col">Area</th>
+                        <th scope="col">Category</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Votes</th>
+                        <th scope="col">Change status</th>
+                    </tr>
+                </thead>
+                <tbody id="report-list"></tbody>
+            </table>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">CityFix - a learning project for reporting small city problems.</div>
+    </footer>
+
+    <script src="js/api.js"></script>
+    <script src="js/admin.js"></script>
+</body>
+</html>

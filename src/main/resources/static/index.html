@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CityFix - Reports</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a class="brand" href="index.html">CityFix</a>
+            <nav class="nav">
+                <a href="index.html" aria-current="page">Reports</a>
+                <a href="new-report.html">Report a problem</a>
+                <a href="admin.html">Staff</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <h1>Reports</h1>
+        <p class="page-intro">See problems reported in your city and upvote the ones that affect you.</p>
+
+        <form id="filter-form" class="card filter-bar">
+            <div class="form-group">
+                <label for="area">Area</label>
+                <input type="text" id="area" name="area" placeholder="Downtown">
+            </div>
+            <div class="form-group">
+                <label for="status">Status</label>
+                <select id="status" name="status">
+                    <option value="">All</option>
+                    <option value="REPORTED">Reported</option>
+                    <option value="IN_PROGRESS">In progress</option>
+                    <option value="FIXED">Fixed</option>
+                    <option value="REJECTED">Rejected</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="category">Category</label>
+                <select id="category" name="category">
+                    <option value="">All</option>
+                    <option value="POTHOLE">Pothole</option>
+                    <option value="STREETLIGHT">Streetlight</option>
+                    <option value="GARBAGE">Garbage</option>
+                    <option value="GRAFFITI">Graffiti</option>
+                    <option value="WATER_LEAK">Water leak</option>
+                    <option value="OTHER">Other</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="sort">Sort by</label>
+                <select id="sort" name="sort">
+                    <option value="newest">Newest</option>
+                    <option value="votes">Most votes</option>
+                </select>
+            </div>
+            <button type="submit">Show reports</button>
+        </form>
+
+        <p id="stats" class="stats"></p>
+        <p id="message" class="message"></p>
+        <ul id="report-list" class="card-grid"></ul>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">CityFix - a learning project for reporting small city problems.</div>
+    </footer>
+
+    <script src="js/api.js"></script>
+    <script src="js/reports.js"></script>
+</body>
+</html>

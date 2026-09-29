@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CityFix - Report</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a class="brand" href="index.html">CityFix</a>
+            <nav class="nav">
+                <a href="index.html" aria-current="page">Reports</a>
+                <a href="new-report.html">Report a problem</a>
+                <a href="admin.html">Staff</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <a class="back-link" href="index.html">Back to all reports</a>
+
+        <p id="message" class="message">Loading...</p>
+
+        <div class="detail-layout">
+            <article id="report" class="card" hidden>
+                <h1 id="title"></h1>
+                <div class="detail-badges">
+                    <span id="status" class="badge"></span>
+                    <span id="category" class="tag"></span>
+                </div>
+                <p id="description"></p>
+                <dl class="detail-list">
+                    <dt>Area</dt>
+                    <dd id="area"></dd>
+                    <dt>Address</dt>
+                    <dd id="address"></dd>
+                    <dt>Reported by</dt>
+                    <dd id="reporter"></dd>
+                    <dt>Reported on</dt>
+                    <dd id="created"></dd>
+                    <dt>Fixed on</dt>
+                    <dd id="fixed"></dd>
+                </dl>
+            </article>
+
+            <form id="upvote-form" class="card upvote-card" hidden>
+                <p id="votes" class="vote-count"></p>
+                <h2>This affects me too</h2>
+                <div class="form-group">
+                    <label for="voterEmail">Your email</label>
+                    <input type="email" id="voterEmail" name="voterEmail">
+                </div>
+                <button type="submit">Upvote</button>
+                <p id="upvote-message" class="message"></p>
+            </form>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">CityFix - a learning project for reporting small city problems.</div>
+    </footer>
+
+    <script src="js/api.js"></script>
+    <script src="js/report-detail.js"></script>
+</body>
+</html>
