@@ -46,6 +46,17 @@ function createReportRow(report) {
     return row;
 }
 
+function createEmptyRow() {
+    const cell = document.createElement("td");
+    cell.colSpan = 6;
+    cell.textContent = "There are no reports yet.";
+    cell.setAttribute("role", "status");
+    cell.setAttribute("aria-live", "polite");
+    const row = document.createElement("tr");
+    row.append(cell);
+    return row;
+}
+
 async function changeStatus(report, select, badge) {
     const newStatus = select.value;
     message.className = "message";
@@ -69,7 +80,11 @@ async function loadReports() {
     message.textContent = "Loading reports...";
     try {
         const reports = await getReports({});
-        reportList.replaceChildren(...reports.map(createReportRow));
+        if (reports.length === 0) {
+            reportList.replaceChildren(createEmptyRow());
+        } else {
+            reportList.replaceChildren(...reports.map(createReportRow));
+        }
         message.textContent = "";
     } catch (error) {
         message.className = "message message-error";
