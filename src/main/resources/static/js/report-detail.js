@@ -5,6 +5,7 @@ const upvoteForm = document.getElementById("upvote-form");
 const upvoteMessage = document.getElementById("upvote-message");
 
 function showReport(report) {
+    document.title = "CityFix \u2013 " + report.title;
     document.getElementById("title").textContent = report.title;
     document.getElementById("status").textContent = formatLabel(report.status);
     document.getElementById("status").className = badgeClass(report.status);
