@@ -15,7 +15,15 @@ function showReport(report) {
     document.getElementById("address").textContent = report.address || "Not given";
     document.getElementById("reporter").textContent = report.reporterName;
     document.getElementById("created").textContent = formatDate(report.createdAt);
-    document.getElementById("fixed").textContent = report.fixedAt ? formatDate(report.fixedAt) : "Not fixed yet";
+
+    const fixedEl = document.getElementById("fixed");
+    if (report.status === "FIXED") {
+        fixedEl.textContent = report.fixedAt ? formatDate(report.fixedAt) : "Not recorded";
+    } else if (report.status === "REJECTED") {
+        fixedEl.textContent = "Not applicable";
+    } else {
+        fixedEl.textContent = "Not fixed yet";
+    }
 }
 
 async function loadReport() {
