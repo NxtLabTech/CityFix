@@ -11,8 +11,7 @@ This is a small learning project. It is meant for students who want to practice 
 - H2 in-memory database by default, MySQL as an option
 - Plain HTML, CSS and JavaScript for the frontend
 - JUnit 5, Mockito and AssertJ for tests
-
-## Quick start
+n ,,n
 
 1. Install Java 21.
 2. Clone this repository.
