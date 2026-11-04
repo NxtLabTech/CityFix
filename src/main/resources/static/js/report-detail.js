@@ -3,6 +3,7 @@ const message = document.getElementById("message");
 const reportDetails = document.getElementById("report");
 const upvoteForm = document.getElementById("upvote-form");
 const upvoteMessage = document.getElementById("upvote-message");
+const fieldValidation = CityFixFieldValidation;
 
 function showReport(report) {
     document.getElementById("title").textContent = report.title;
@@ -37,8 +38,11 @@ async function loadReport() {
     }
 }
 
+fieldValidation.bindFieldErrorClearing(upvoteForm);
+
 upvoteForm.addEventListener("submit", async event => {
     event.preventDefault();
+    fieldValidation.clearFieldErrors(upvoteForm);
     upvoteMessage.className = "message";
     upvoteMessage.textContent = "Sending...";
 
@@ -49,6 +53,14 @@ upvoteForm.addEventListener("submit", async event => {
         upvoteMessage.className = "message message-success";
         upvoteMessage.textContent = "Thank you, your vote was added.";
     } catch (error) {
+        const fieldErrors = fieldValidation.parseFieldErrors(error.message, ["voterEmail"]);
+
+        if (fieldValidation.showFieldErrors(upvoteForm, fieldErrors)) {
+            upvoteMessage.className = "message";
+            upvoteMessage.textContent = "";
+            return;
+        }
+
         upvoteMessage.className = "message message-error";
         upvoteMessage.textContent = error.message;
     }

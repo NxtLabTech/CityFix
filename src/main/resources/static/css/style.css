@@ -469,3 +469,21 @@ td select {
         grid-template-columns: repeat(3, 1fr);
     }
 }
+
+/* Inline field validation */
+input[aria-invalid="true"],
+select[aria-invalid="true"],
+textarea[aria-invalid="true"] {
+    border-color: var(--danger-text);
+}
+
+.field-error {
+    margin: var(--space-1) 0 0;
+    color: var(--danger-text);
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.field-error[hidden] {
+    display: none;
+}
