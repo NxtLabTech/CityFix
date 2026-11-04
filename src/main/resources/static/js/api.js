@@ -17,14 +17,14 @@ function jsonOptions(method, body) {
     };
 }
 
-function getReports(filters) {
+function getReports(filters, signal) {
     const params = new URLSearchParams();
     for (const [name, value] of Object.entries(filters || {})) {
         if (value) {
             params.append(name, value);
         }
     }
-    return request(API_URL + "?" + params);
+    return request(API_URL + "?" + params, { signal: signal });
 }
 
 function getReport(id) {
@@ -43,8 +43,8 @@ function updateStatus(id, status) {
     return request(API_URL + "/" + id + "/status", jsonOptions("PATCH", { status: status }));
 }
 
-function getStats() {
-    return request(API_URL + "/stats");
+function getStats(signal) {
+    return request(API_URL + "/stats", { signal: signal });
 }
 
 function formatLabel(value) {

@@ -44,18 +44,37 @@ function showStats(stats) {
     statsText.textContent = parts.join(" | ");
 }
 
+let currentRequest = null;
+
 async function loadReports() {
     message.className = "message";
     message.textContent = "Loading reports...";
     reportList.replaceChildren();
 
+    // Cancel the previous request so its late response cannot change the list.
+    if (currentRequest) {
+        currentRequest.abort();
+    }
+    const thisRequest = new AbortController();
+    currentRequest = thisRequest;
+
     try {
         const filters = Object.fromEntries(new FormData(filterForm));
-        const [reports, stats] = await Promise.all([getReports(filters), getStats()]);
+        const [reports, stats] = await Promise.all([
+            getReports(filters, thisRequest.signal),
+            getStats(thisRequest.signal)
+        ]);
+        if (thisRequest !== currentRequest) {
+            return;
+        }
         showStats(stats);
         message.textContent = reports.length === 0 ? "No reports found. Try changing the filters." : "";
         reports.forEach(report => reportList.append(createReportItem(report)));
     } catch (error) {
+        // A newer request replaced this one; it shows its own result.
+        if (thisRequest !== currentRequest) {
+            return;
+        }
         message.className = "message message-error";
         message.textContent = "Could not load reports: " + error.message;
     }
