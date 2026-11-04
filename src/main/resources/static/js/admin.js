@@ -3,7 +3,8 @@ const STATUSES = ["REPORTED", "IN_PROGRESS", "FIXED", "REJECTED"];
 const message = document.getElementById("message");
 const reportList = document.getElementById("report-list");
 
-function createStatusSelect(report, badge) {
+// Changing the dropdown only selects a status. It is saved when the Save button is used.
+function createStatusControl(report, badge) {
     const select = document.createElement("select");
     select.setAttribute("aria-label", "Status of " + report.title);
 
@@ -15,8 +16,34 @@ function createStatusSelect(report, badge) {
         select.append(option);
     }
 
-    select.addEventListener("change", () => changeStatus(report, select, badge));
-    return select;
+    const button = document.createElement("button");
+    button.type = "submit";
+    button.textContent = "Save";
+    button.setAttribute("aria-label", "Save status of " + report.title);
+    button.disabled = true;
+
+    const feedback = document.createElement("p");
+    feedback.className = "status-feedback";
+    feedback.setAttribute("role", "status");
+
+    const form = document.createElement("form");
+    form.className = "status-control";
+    form.append(select, button, feedback);
+
+    select.addEventListener("change", () => {
+        button.disabled = select.value === report.status;
+        feedback.className = "status-feedback";
+        feedback.textContent = "";
+    });
+
+    form.addEventListener("submit", event => {
+        event.preventDefault();
+        if (select.value !== report.status) {
+            changeStatus(report, { select, button, feedback, badge });
+        }
+    });
+
+    return form;
 }
 
 function createCell(content) {
@@ -41,27 +68,35 @@ function createReportRow(report) {
         createCell(formatLabel(report.category)),
         createCell(badge),
         createCell(formatVotes(report.upvoteCount)),
-        createCell(createStatusSelect(report, badge))
+        createCell(createStatusControl(report, badge))
     );
     return row;
 }
 
-async function changeStatus(report, select, badge) {
+async function changeStatus(report, control) {
+    const { select, button, feedback, badge } = control;
     const newStatus = select.value;
-    message.className = "message";
-    message.textContent = "Saving...";
+    select.disabled = true;
+    button.disabled = true;
+    button.textContent = "Saving...";
+    feedback.className = "status-feedback";
+    feedback.textContent = "";
 
     try {
         await updateStatus(report.id, newStatus);
         report.status = newStatus;
         badge.className = badgeClass(newStatus);
         badge.textContent = formatLabel(newStatus);
-        message.className = "message message-success";
-        message.textContent = "Status of \"" + report.title + "\" changed to " + formatLabel(newStatus) + ".";
+        feedback.className = "status-feedback status-feedback-success";
+        feedback.textContent = "Saved as " + formatLabel(newStatus) + ".";
     } catch (error) {
-        message.className = "message message-error";
-        message.textContent = "Could not change the status: " + error.message;
-        select.value = report.status;
+        feedback.className = "status-feedback status-feedback-error";
+        feedback.textContent = "Could not save: " + error.message;
+    } finally {
+        select.disabled = false;
+        button.textContent = "Save";
+        button.disabled = select.value === report.status;
+        select.focus();
     }
 }
 

@@ -450,6 +450,43 @@ td select {
     min-width: 140px;
 }
 
+.status-control {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2);
+}
+
+.status-control button {
+    padding: 6px var(--space-3);
+}
+
+button:disabled,
+button:disabled:hover {
+    color: var(--text-muted);
+    background: var(--background);
+    border-color: var(--border);
+    cursor: not-allowed;
+}
+
+.status-feedback {
+    flex-basis: 100%;
+    margin: 0;
+    font-size: 0.875rem;
+}
+
+.status-feedback:empty {
+    display: none;
+}
+
+.status-feedback-success {
+    color: var(--success-text);
+}
+
+.status-feedback-error {
+    color: var(--danger-text);
+}
+
 /* Tablet and desktop */
 @media (min-width: 640px) {
     .card-grid {
