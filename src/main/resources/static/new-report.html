@@ -25,15 +25,17 @@
         <form id="report-form" class="card form-card" novalidate>
             <div class="form-group">
                 <label for="title">Title</label>
-                <input type="text" id="title" name="title">
+                <input type="text" id="title" name="title" aria-invalid="false" aria-describedby="title-error">
+                <p id="title-error" class="field-error" aria-live="polite" hidden></p>
             </div>
             <div class="form-group">
                 <label for="description">Description</label>
-                <textarea id="description" name="description"></textarea>
+                <textarea id="description" name="description" aria-invalid="false" aria-describedby="description-error"></textarea>
+                <p id="description-error" class="field-error" aria-live="polite" hidden></p>
             </div>
             <div class="form-group">
                 <label for="category">Category</label>
-                <select id="category" name="category">
+                <select id="category" name="category" aria-invalid="false" aria-describedby="category-error">
                     <option value="">Choose a category</option>
                     <option value="POTHOLE">Pothole</option>
                     <option value="STREETLIGHT">Streetlight</option>
@@ -42,10 +44,12 @@
                     <option value="WATER_LEAK">Water leak</option>
                     <option value="OTHER">Other</option>
                 </select>
+                <p id="category-error" class="field-error" aria-live="polite" hidden></p>
             </div>
             <div class="form-group">
                 <label for="area">Area</label>
-                <input type="text" id="area" name="area" placeholder="For example Downtown">
+                <input type="text" id="area" name="area" placeholder="For example Downtown" aria-invalid="false" aria-describedby="area-error">
+                <p id="area-error" class="field-error" aria-live="polite" hidden></p>
             </div>
             <div class="form-group">
                 <label for="address">Address</label>
@@ -53,11 +57,13 @@
             </div>
             <div class="form-group">
                 <label for="reporterName">Your name</label>
-                <input type="text" id="reporterName" name="reporterName">
+                <input type="text" id="reporterName" name="reporterName" aria-invalid="false" aria-describedby="reporterName-error">
+                <p id="reporterName-error" class="field-error" aria-live="polite" hidden></p>
             </div>
             <div class="form-group">
                 <label for="reporterEmail">Your email</label>
-                <input type="email" id="reporterEmail" name="reporterEmail">
+                <input type="email" id="reporterEmail" name="reporterEmail" aria-invalid="false" aria-describedby="reporterEmail-error">
+                <p id="reporterEmail-error" class="field-error" aria-live="polite" hidden></p>
             </div>
 
             <button type="submit">Submit report</button>
@@ -70,6 +76,7 @@
     </footer>
 
     <script src="js/api.js"></script>
+    <script src="js/form-validation.js"></script>
     <script src="js/new-report.js"></script>
 </body>
 </html>

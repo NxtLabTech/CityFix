@@ -50,7 +50,8 @@
                 <h2>This affects me too</h2>
                 <div class="form-group">
                     <label for="voterEmail">Your email</label>
-                    <input type="email" id="voterEmail" name="voterEmail">
+                    <input type="email" id="voterEmail" name="voterEmail" aria-invalid="false" aria-describedby="voterEmail-error">
+                    <p id="voterEmail-error" class="field-error" aria-live="polite" hidden></p>
                 </div>
                 <button type="submit">Upvote</button>
                 <p id="upvote-message" class="message"></p>
@@ -63,6 +64,7 @@
     </footer>
 
     <script src="js/api.js"></script>
+    <script src="js/form-validation.js"></script>
     <script src="js/report-detail.js"></script>
 </body>
 </html>
