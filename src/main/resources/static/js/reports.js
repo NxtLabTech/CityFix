@@ -61,9 +61,64 @@ async function loadReports() {
     }
 }
 
+// The URL is the source of truth for the filters.
+// Only these query parameters are read; anything else is ignored.
+const FILTER_NAMES = ["area", "status", "category", "sort"];
+const DEFAULT_SORT = "newest";
+
+function readFiltersFromUrl() {
+    const params = new URLSearchParams(window.location.search);
+
+    FILTER_NAMES.forEach(name => {
+        const field = filterForm.elements[name];
+        const value = (params.get(name) || "").trim();
+
+        if (field.tagName === "SELECT") {
+            // URL values are lowercase (status=fixed); option values are uppercase.
+            // Unknown values fall back to the first option.
+            const match = Array.from(field.options)
+                .find(option => option.value.toLowerCase() === value.toLowerCase());
+            field.value = match ? match.value : field.options[0].value;
+        } else {
+            field.value = value;
+        }
+    });
+}
+
+function writeFiltersToUrl() {
+    const params = new URLSearchParams();
+
+    FILTER_NAMES.forEach(name => {
+        const field = filterForm.elements[name];
+        const value = field.value.trim();
+        const urlValue = field.tagName === "SELECT" ? value.toLowerCase() : value;
+
+        // Leave out empty values and the default sort to keep the URL short
+        if (urlValue && !(name === "sort" && urlValue === DEFAULT_SORT)) {
+            params.set(name, urlValue);
+        }
+    });
+
+    const query = params.toString();
+    const newUrl = window.location.pathname + (query ? "?" + query : "");
+
+    if (newUrl !== window.location.pathname + window.location.search) {
+        history.pushState(null, "", newUrl);
+    }
+}
+
 filterForm.addEventListener("submit", event => {
     event.preventDefault();
+    filterForm.elements.area.value = filterForm.elements.area.value.trim();
+    writeFiltersToUrl();
     loadReports();
 });
 
+// Browser Back/Forward between filtered views on this page
+window.addEventListener("popstate", () => {
+    readFiltersFromUrl();
+    loadReports();
+});
+
+readFiltersFromUrl();
 loadReports();
