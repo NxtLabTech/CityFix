@@ -4,6 +4,16 @@ const reportDetails = document.getElementById("report");
 const upvoteForm = document.getElementById("upvote-form");
 const upvoteMessage = document.getElementById("upvote-message");
 
+function formatFixedOn(report) {
+    if (report.status !== "FIXED") {
+        return "Not fixed yet";
+    }
+    if (!report.fixedAt || isNaN(new Date(report.fixedAt))) {
+        return "Date not recorded";
+    }
+    return formatDate(report.fixedAt);
+}
+
 function showReport(report) {
     document.getElementById("title").textContent = report.title;
     document.getElementById("status").textContent = formatLabel(report.status);
@@ -15,7 +25,10 @@ function showReport(report) {
     document.getElementById("address").textContent = report.address || "Not given";
     document.getElementById("reporter").textContent = report.reporterName;
     document.getElementById("created").textContent = formatDate(report.createdAt);
-    document.getElementById("fixed").textContent = report.fixedAt ? formatDate(report.fixedAt) : "Not fixed yet";
+    const showFixed = report.status !== "REJECTED";
+    document.getElementById("fixed-label").hidden = !showFixed;
+    document.getElementById("fixed").hidden = !showFixed;
+    document.getElementById("fixed").textContent = formatFixedOn(report);
 }
 
 async function loadReport() {
