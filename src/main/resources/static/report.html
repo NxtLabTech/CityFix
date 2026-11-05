@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -45,12 +46,18 @@
                 </dl>
             </article>
 
-            <form id="upvote-form" class="card upvote-card" hidden>
+            <form id="upvote-form" class="card upvote-card" hidden novalidate>
                 <p id="votes" class="vote-count"></p>
                 <h2>This affects me too</h2>
                 <div class="form-group">
                     <label for="voterEmail">Your email</label>
-                    <input type="email" id="voterEmail" name="voterEmail">
+                    <input
+                        type="email"
+                        id="voterEmail"
+                        name="voterEmail"
+                        aria-describedby="voterEmail-error"
+                    >
+                    <p id="voterEmail-error" class="field-error"></p>
                 </div>
                 <button type="submit">Upvote</button>
                 <p id="upvote-message" class="message"></p>
