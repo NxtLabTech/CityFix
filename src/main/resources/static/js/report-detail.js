@@ -3,6 +3,7 @@ const message = document.getElementById("message");
 const reportDetails = document.getElementById("report");
 const upvoteForm = document.getElementById("upvote-form");
 const upvoteMessage = document.getElementById("upvote-message");
+const voterEmailError = document.getElementById("voterEmail-error");
 
 function showReport(report) {
     document.getElementById("title").textContent = report.title;
@@ -39,18 +40,47 @@ async function loadReport() {
 
 upvoteForm.addEventListener("submit", async event => {
     event.preventDefault();
+
+    voterEmailError.textContent = "";
+    document.getElementById("voterEmail").removeAttribute("aria-invalid");
+
     upvoteMessage.className = "message";
     upvoteMessage.textContent = "Sending...";
 
     try {
-        const report = await upvoteReport(reportId, document.getElementById("voterEmail").value);
+        const report = await upvoteReport(
+            reportId,
+            document.getElementById("voterEmail").value
+        );
+
         showReport(report);
         upvoteForm.reset();
+
         upvoteMessage.className = "message message-success";
         upvoteMessage.textContent = "Thank you, your vote was added.";
     } catch (error) {
-        upvoteMessage.className = "message message-error";
-        upvoteMessage.textContent = error.message;
+        const errorMessage = error.message || "Something went wrong";
+
+        const emailError = errorMessage
+            .split(";")
+            .map(item => item.trim())
+            .find(item => item.toLowerCase().startsWith("voteremail"));
+
+        if (emailError) {
+            voterEmailError.textContent =
+                "Your email " + emailError.slice("voterEmail".length).trim();
+
+            document.getElementById("voterEmail")
+                .setAttribute("aria-invalid", "true");
+
+            document.getElementById("voterEmail").focus();
+
+            upvoteMessage.className = "message";
+            upvoteMessage.textContent = "";
+        } else {
+            upvoteMessage.className = "message message-error";
+            upvoteMessage.textContent = errorMessage;
+        }
     }
 });
 

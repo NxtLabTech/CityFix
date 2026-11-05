@@ -1,5 +1,4 @@
 package com.cityfix.controller;
-
 import com.cityfix.dto.CreateReportRequest;
 import com.cityfix.exception.ReportNotFoundException;
 import com.cityfix.model.Category;
@@ -36,6 +35,7 @@ class ReportControllerTest {
         report.setTitle("Pothole");
         report.setCategory(Category.POTHOLE);
         report.setStatus(ReportStatus.REPORTED);
+
         when(reportService.createReport(any(CreateReportRequest.class))).thenReturn(report);
 
         String json = """
@@ -50,7 +50,9 @@ class ReportControllerTest {
                 }
                 """;
 
-        mockMvc.perform(post("/api/reports").contentType(MediaType.APPLICATION_JSON).content(json))
+        mockMvc.perform(post("/api/reports")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").value(1))
                 .andExpect(jsonPath("$.status").value("REPORTED"));
@@ -58,12 +60,14 @@ class ReportControllerTest {
 
     @Test
     void getMissingReportReturns404() throws Exception {
-        when(reportService.findReportById(99L)).thenThrow(new ReportNotFoundException(99L));
+        when(reportService.findReportById(99L))
+                .thenThrow(new ReportNotFoundException(99L));
 
         mockMvc.perform(get("/api/reports/99"))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.status").value(404))
-                .andExpect(jsonPath("$.message").value("Report with id 99 not found"));
+                .andExpect(jsonPath("$.message")
+                        .value("Report with id 99 not found"));
     }
 
     @Test
@@ -78,8 +82,29 @@ class ReportControllerTest {
                 }
                 """;
 
-        mockMvc.perform(post("/api/reports").contentType(MediaType.APPLICATION_JSON).content(json))
+        mockMvc.perform(post("/api/reports")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.status").value(400));
+                .andExpect(jsonPath("$.status").value(400))
+                .andExpect(jsonPath("$.message")
+                        .value("title must not be blank"));
+    }
+
+    @Test
+    void upvoteWithInvalidEmailReturns400() throws Exception {
+        String json = """
+                {
+                  "voterEmail": "not-an-email"
+                }
+                """;
+
+        mockMvc.perform(post("/api/reports/1/upvotes")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.status").value(400))
+                .andExpect(jsonPath("$.message")
+                        .value("voterEmail must be a well-formed email address"));
     }
 }
