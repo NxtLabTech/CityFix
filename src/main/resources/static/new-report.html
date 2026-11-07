@@ -61,7 +61,8 @@
             </div>
 
             <button type="submit">Submit report</button>
-            <p id="message" class="message"></p>
+            <p id="message" class="message" role="status"></p>
+            <p id="message-error" class="message message-error" role="alert"></p>
         </form>
     </main>
 
@@ -69,6 +70,7 @@
         <div class="container">CityFix - a learning project for reporting small city problems.</div>
     </footer>
 
+    <script src="js/messages.js"></script>
     <script src="js/api.js"></script>
     <script src="js/new-report.js"></script>
 </body>

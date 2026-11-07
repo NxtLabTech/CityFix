@@ -21,7 +21,8 @@
     <main class="container">
         <a class="back-link" href="index.html">Back to all reports</a>
 
-        <p id="message" class="message">Loading...</p>
+        <p id="message" class="message" role="status"></p>
+        <p id="message-error" class="message message-error" role="alert"></p>
 
         <div class="detail-layout">
             <article id="report" class="card" hidden>
@@ -53,7 +54,8 @@
                     <input type="email" id="voterEmail" name="voterEmail">
                 </div>
                 <button type="submit">Upvote</button>
-                <p id="upvote-message" class="message"></p>
+                <p id="upvote-message" class="message" role="status"></p>
+                <p id="upvote-message-error" class="message message-error" role="alert"></p>
             </form>
         </div>
     </main>
@@ -62,6 +64,7 @@
         <div class="container">CityFix - a learning project for reporting small city problems.</div>
     </footer>
 
+    <script src="js/messages.js"></script>
     <script src="js/api.js"></script>
     <script src="js/report-detail.js"></script>
 </body>
