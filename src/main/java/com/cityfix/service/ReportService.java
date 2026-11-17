@@ -58,12 +58,20 @@ public class ReportService {
         return reportRepository.findById(id).orElseThrow(() -> new ReportNotFoundException(id));
     }
 
-    public List<Report> findReports(String area, ReportStatus status, Category category, String sort) {
-        return reportRepository.findAll(createSort(sort)).stream()
-                .filter(report -> area == null || report.getArea().equalsIgnoreCase(area))
-                .filter(report -> status == null || report.getStatus() == status)
-                .filter(report -> category == null || report.getCategory() == category)
-                .toList();
+    public List<Report> findReports(
+            String area,
+            ReportStatus status,
+            Category category,
+            String sort) {
+        String normalizedArea = (area == null || area.isBlank())
+                ? null
+                : area.trim();
+
+        return reportRepository.findFilteredReports(
+                normalizedArea,
+                status,
+                category,
+                createSort(sort));
     }
 
     public Report updateStatus(Long id, ReportStatus newStatus) {
