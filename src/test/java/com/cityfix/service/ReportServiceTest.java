@@ -15,6 +15,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -92,5 +94,57 @@ class ReportServiceTest {
 
         assertThat(report.getUpvoteCount()).isEqualTo(2);
         verify(upvoteRepository, never()).save(any(Upvote.class));
+    }
+
+    @Test
+    void getStatsUsesTwoGroupByQueriesAndPreservesZeroCountsAndEnumOrder() {
+        List<Object[]> statusRows = List.of(
+                new Object[]{ReportStatus.REPORTED, 5L},
+                new Object[]{ReportStatus.FIXED, 2L}
+        );
+        List<Object[]> categoryRows = List.of(
+                new Object[]{Category.POTHOLE, 4L},
+                new Object[]{Category.WATER_LEAK, 3L}
+        );
+
+        when(reportRepository.countGroupedByStatus()).thenReturn(statusRows);
+        when(reportRepository.countGroupedByCategory()).thenReturn(categoryRows);
+
+        Map<String, Map<String, Long>> stats = reportService.getStats();
+
+        // Acceptance Criteria: Two GROUP BY queries replace the repeated status/category count queries
+        verify(reportRepository).countGroupedByStatus();
+        verify(reportRepository).countGroupedByCategory();
+        verify(reportRepository, never()).countByStatus(any());
+        verify(reportRepository, never()).countByCategory(any());
+
+        // Acceptance Criteria: Zero-count statuses/categories are still returned in enum order
+        Map<String, Long> byStatus = stats.get("byStatus");
+        assertThat(byStatus.keySet()).containsExactly(
+                ReportStatus.REPORTED.name(),
+                ReportStatus.IN_PROGRESS.name(),
+                ReportStatus.FIXED.name(),
+                ReportStatus.REJECTED.name()
+        );
+        assertThat(byStatus.get("REPORTED")).isEqualTo(5L);
+        assertThat(byStatus.get("IN_PROGRESS")).isZero();
+        assertThat(byStatus.get("FIXED")).isEqualTo(2L);
+        assertThat(byStatus.get("REJECTED")).isZero();
+
+        Map<String, Long> byCategory = stats.get("byCategory");
+        assertThat(byCategory.keySet()).containsExactly(
+                Category.POTHOLE.name(),
+                Category.STREETLIGHT.name(),
+                Category.GARBAGE.name(),
+                Category.GRAFFITI.name(),
+                Category.WATER_LEAK.name(),
+                Category.OTHER.name()
+        );
+        assertThat(byCategory.get("POTHOLE")).isEqualTo(4L);
+        assertThat(byCategory.get("STREETLIGHT")).isZero();
+        assertThat(byCategory.get("GARBAGE")).isZero();
+        assertThat(byCategory.get("GRAFFITI")).isZero();
+        assertThat(byCategory.get("WATER_LEAK")).isEqualTo(3L);
+        assertThat(byCategory.get("OTHER")).isZero();
     }
 }

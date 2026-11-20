@@ -82,4 +82,17 @@ class ReportControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.status").value(400));
     }
+
+    @Test
+    void getStatsReturnsStatsMap() throws Exception {
+        when(reportService.getStats()).thenReturn(java.util.Map.of(
+                "byStatus", java.util.Map.of("REPORTED", 1L),
+                "byCategory", java.util.Map.of("POTHOLE", 1L)
+        ));
+
+        mockMvc.perform(get("/api/reports/stats"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.byStatus.REPORTED").value(1))
+                .andExpect(jsonPath("$.byCategory.POTHOLE").value(1));
+    }
 }
