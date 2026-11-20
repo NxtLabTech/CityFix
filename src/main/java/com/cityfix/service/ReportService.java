@@ -101,12 +101,22 @@ public class ReportService {
     public Map<String, Map<String, Long>> getStats() {
         Map<String, Long> byStatus = new LinkedHashMap<>();
         for (ReportStatus status : ReportStatus.values()) {
-            byStatus.put(status.name(), reportRepository.countByStatus(status));
+            byStatus.put(status.name(), 0L);
+        }
+        for (Object[] row : reportRepository.countGroupedByStatus()) {
+            String statusName = (row[0] instanceof ReportStatus s) ? s.name() : row[0].toString();
+            Long count = ((Number) row[1]).longValue();
+            byStatus.put(statusName, count);
         }
 
         Map<String, Long> byCategory = new LinkedHashMap<>();
         for (Category category : Category.values()) {
-            byCategory.put(category.name(), reportRepository.countByCategory(category));
+            byCategory.put(category.name(), 0L);
+        }
+        for (Object[] row : reportRepository.countGroupedByCategory()) {
+            String categoryName = (row[0] instanceof Category c) ? c.name() : row[0].toString();
+            Long count = ((Number) row[1]).longValue();
+            byCategory.put(categoryName, count);
         }
 
         return Map.of("byStatus", byStatus, "byCategory", byCategory);
