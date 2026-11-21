@@ -70,7 +70,12 @@ async function loadReports() {
     try {
         const reports = await getReports({});
         reportList.replaceChildren(...reports.map(createReportRow));
-        message.textContent = "";
+        if (reports.length === 0) {
+            message.textContent = "No reports found.";
+        } else {
+            message.textContent = "";
+        }
+
     } catch (error) {
         message.className = "message message-error";
         message.textContent = "Could not load reports: " + error.message;
