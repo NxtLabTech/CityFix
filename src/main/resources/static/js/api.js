@@ -63,3 +63,11 @@ function formatVotes(count) {
 function formatDate(isoDate) {
     return new Date(isoDate).toLocaleDateString();
 }
+
+function showMessage(element, text, type) {
+    if (!element) {
+        return;
+    }
+    element.className = type ? "message message-" + type : "message";
+    element.textContent = text ?? "";
+}
